@@ -1,29 +1,18 @@
 ###########################################################################
-#     Un p'tit voyage - Greg Gontier
+#     Yellow - Coldplay (Wisp Cover)
 #   Written by Chutipon (Potter) Chutipanich 
-#           2025-12-01
+#           2025-12-03
 ###########################################################################
-
-# Setup:
-#      1. Activate virtual environment: cd venv/Scripts/; activate.bat
-#      2.Run server: uvicorn app.main:app --reload
 
 ###########################################################################
 #
-#   region Standard Imports
+#   region Imports
 #
 ###########################################################################
 
-from fastapi import FastAPI
-
-###########################################################################
-#
-#   region Local Imports
-#
-###########################################################################
-
-from .database import engine
-from . import models
+from sqlalchemy import create_engine
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import sessionmaker
 
 ###########################################################################
 #
@@ -37,18 +26,25 @@ from . import models
 #
 ###########################################################################
 
+# SQLite db url
+SQLALCHEMY_DATABASE_URL = "sqlite:///./finance.db"
+
 ###########################################################################
 #
 #   region Class Definitions
 #
 ###########################################################################
 
-# create db
-models.Base.metadata.create_all(bind=engine)
+# Create engine
+# "check_same_thread": False is needed only for SQLite
+engine = create_engine(
+    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+)
 
-# create app instance
-app = FastAPI()
+# Create session 
+# Each instance of this class will be a database session
+SessionLocal = sessionmaker( autocommit=False, autoflush=False, bind=engine )
 
-@app.get( "/" )
-def root():
-    return { "message": "Hello World!" }
+# Create a Base class
+# This is the base class for all the database tables
+Base = declarative_base()
