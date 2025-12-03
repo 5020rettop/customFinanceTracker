@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 ###########################################################################
 #     Yellow - Coldplay (Wisp Cover)
 #   Written by Chutipon (Potter) Chutipanich 
@@ -9,10 +10,10 @@
 #   region Imports
 #
 ###########################################################################
-
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
+
 
 ###########################################################################
 #

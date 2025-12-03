@@ -6,14 +6,14 @@
 
 # Setup:
 #      1. Activate virtual environment: cd venv/Scripts/; activate.bat
-#      2.Run server: uvicorn app.main:app --reload
+#      2.Run server: uvicorn finance_api.app.main:app --reload
 
 ###########################################################################
 #
 #   region Standard Imports
 #
 ###########################################################################
-
+from datetime import date
 from fastapi import FastAPI
 
 ###########################################################################
@@ -22,7 +22,7 @@ from fastapi import FastAPI
 #
 ###########################################################################
 
-from .database import engine
+from .database import engine, SessionLocal
 from . import models
 
 ###########################################################################
@@ -31,6 +31,37 @@ from . import models
 #
 ###########################################################################
 
+def test_insert_transaction( 
+        amount : float,
+        desc : str,
+        _date : date,
+        type : str,
+        category_id : int
+):
+    # create db session
+    db = SessionLocal()
+
+    # new transaction
+    new_transaction = models.Transaction(
+        amount=amount,
+        description=desc,
+        date=_date,
+        type=type,
+        category_id=category_id
+    )
+
+    # Add and commit the transaction
+    try:
+        db.add(new_transaction)
+        db.commit()
+        db.refresh(new_transaction)
+        print(f"Transaction inserted successfully with ID: {new_transaction.id}")
+    except Exception as e:
+        db.rollback()
+        print(f"Error inserting transaction: {e}")
+    finally:
+        db.close()
+        
 ###########################################################################
 #
 #   region Program Specific Globals
@@ -51,4 +82,10 @@ app = FastAPI()
 
 @app.get( "/" )
 def root():
-    return { "message": f'Hello {models.Category.id}' }
+    test_insert_transaction( amount=250.0, 
+                            desc="Test via API",
+                            _date=date.today(), 
+                            type="income", 
+                            category_id=1 
+                        )
+    return { "message": f'Hello {models.Transaction}' }
