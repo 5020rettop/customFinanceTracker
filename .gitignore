@@ -1,0 +1,10 @@
+# Virtual environment folder
+finance_api/venv/
+
+# Python compiled files
+finance_api/app/__pycache__/
+*.pyc
+
+# Local database file
+*.db
+finance.db
