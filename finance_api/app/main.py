@@ -25,7 +25,7 @@ from fastapi import FastAPI
 
 from .database import engine, SessionLocal
 from . import models
-from .routers import categories, transactions
+from .routers import categories, transactions, auth
 
 ###########################################################################
 #
@@ -83,6 +83,7 @@ models.Base.metadata.create_all(bind=engine)
 app = FastAPI()
 
 # include routers
+app.include_router( auth.router )
 app.include_router( categories.router )
 app.include_router( transactions.router )
 
