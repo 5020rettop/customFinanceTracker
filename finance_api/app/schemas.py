@@ -10,7 +10,7 @@
 #
 ###########################################################################
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from datetime import date
 from typing import List, Optional
 
@@ -59,9 +59,8 @@ class Category(CategoryBase):
     # We will add a list of transactions here later if needed, 
     # but for now, we keep it simple to avoid infinite recursion loops.
 
-    class Config:
-        # This tells Pydantic to treat SQLAlchemy models as dictionaries
-        from_attributes = True 
+    # This tells Pydantic to treat SQLAlchemy models as dictionaries
+    model_config = ConfigDict( from_attributes=True )
 
 # 
 #  For Transaction
@@ -83,8 +82,8 @@ class Transaction(TransactionBase):
     id: int
     category: Optional[Category] = None
 
-    class Config:
-        from_attributes = True
+    # This tells Pydantic to treat SQLAlchemy models as dictionaries
+    model_config = ConfigDict( from_attributes=True )
 
 #
 # For Analytics
