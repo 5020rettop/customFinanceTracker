@@ -1,0 +1,27 @@
+###########################################################################
+#     The View Between Villages - Extended - Noah Kahan
+#   Written by Chutipon (Potter) Chutipanich 
+#           2025-12-06
+###########################################################################
+
+
+###########################################################################
+#       Setup
+###########################################################################
+
+Activate venv:
+    cd finance_api/venv/Scripts
+    activate.bat
+    cd ../../..
+
+
+
+###########################################################################
+#       Details
+###########################################################################
+models.py
+SQLAlchemy is responsible for db models (should reflect the structure of the database). 
+
+schemas.py
+Pydantic should be responsible for schemas (basically defining input and output formats) 
+and DTOs (used to transfer data between different layers of an app). 

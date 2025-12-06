@@ -31,7 +31,16 @@ from typing import List, Optional
 #   region Class Definitions
 #
 ###########################################################################
+''' Pydantic models are the way FastAPI uses to define the schemas of the 
+    data that it receives (requests) and returns (responses). 
 
+    class *tableName*Create(*tableName*Base) represent the data required to create an item. 
+
+    class *tableName*(*tableName*Base) represents the data that is returned when the items are queried. 
+
+    The fields that are common to *tableName*Create and *tableName* are placed in 
+    *tableName*Base to avoid duplication.
+'''
 #
 # For Category
 #

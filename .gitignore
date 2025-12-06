@@ -2,9 +2,11 @@
 finance_api/venv/
 
 # Python compiled files
-finance_api/app/__pycache__/
+finance_api/app/__pycache__/*
 *.pyc
 
 # Local database file
 *.db
 finance.db
+finance_api/app/__pycache__/main.cpython-312.pyc
+finance_api/app/__pycache__/database.cpython-312.pyc
