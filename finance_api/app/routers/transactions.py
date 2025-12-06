@@ -48,3 +48,15 @@ def createTransaction( transaction: schemas.TransactionCreate, db: Session = Dep
 def readTransactions( skip: int = 0, limit: int = 100, db: Session = Depends( get_db ) ):
     transactions = crud.TransactionCRUD.getTransactions( db, skip=skip, limit=limit )
     return transactions
+
+@router.delete( "/{transaction_id}" )
+def deleteTransaction( transaction_id: int, db: Session = Depends( get_db ) ):
+    # check if transaction exists
+    db_transaction = crud.TransactionCRUD.getTransactions( db )
+    # iterate through transactions to find by id
+    if not any( t.id == transaction_id for t in db_transaction ):
+        raise HTTPException( status_code=404, detail="Transaction not found" )
+        
+    # delete transaction
+    crud.TransactionCRUD.deleteTransaction( db, transaction_id=transaction_id )
+    return { "detail": "Transaction deleted successfully" }

@@ -51,3 +51,14 @@ def createCategory( category: schemas.CategoryCreate, db: Session = Depends( get
 def readCategories( skip: int = 0, limit: int = 100, db: Session = Depends( get_db ) ):
     categories = crud.CategoryCRUD.getCategories( db, skip=skip, limit=limit )
     return categories
+
+@router.delete( "/{category_id}" )
+def deleteCategory( category_id: int, db: Session = Depends( get_db ) ):
+    # check if category exists
+    db_category = crud.CategoryCRUD.getCategoryByID( db, category_id=category_id )
+    if db_category is None: # raise 404 if not found
+        raise HTTPException( status_code=404, detail="Category not found" )
+    
+    # delete category
+    crud.CategoryCRUD.deleteCategory( db, category_id=category_id )
+    return { "detail": "Category deleted successfully" }
