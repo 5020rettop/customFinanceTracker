@@ -60,3 +60,11 @@ def deleteTransaction( transaction_id: int, db: Session = Depends( get_db ) ):
     # delete transaction
     crud.TransactionCRUD.deleteTransaction( db, transaction_id=transaction_id )
     return { "detail": "Transaction deleted successfully" }
+
+@router.get( "/breakdown", response_model=List[ schemas.CategoryBreakdown ] )
+def getBreakdown( db: Session = Depends( get_db ) ):
+    return crud.getExpensesByCategory( db )
+
+@router.get( "/monthly", response_model=List[ schemas.MonthlySummary ] )
+def getMonthlySummary( db: Session = Depends( get_db ) ):
+    return crud.getMonthlySummary( db )

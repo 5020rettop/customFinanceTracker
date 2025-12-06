@@ -11,6 +11,8 @@
 ###########################################################################
 
 from sqlalchemy.orm import Session
+from sqlalchemy import func
+
 from . import models, schemas
 
 ###########################################################################
@@ -90,3 +92,21 @@ class TransactionCRUD:
             db.commit()
             return True
         return False
+    
+def getExpensesByCategory( db: Session ):
+    ''' Returns total expenses per category '''
+    return db.query(
+        models.Category.name.label( "category" ),
+            func.sum( models.Transaction.amount ).label( "total" )
+        ).join( models.Transaction ) \
+            .filter( models.Transaction.type == "expense" ) \
+            .group_by( models.Category.name ).all()
+
+def getMonthlySummary(db: Session):
+    ''' Returns total income and expenses grouped by month '''
+    return db.query(
+            # Extract YYYY-MM from the date column
+            func.strftime("%Y-%m", models.Transaction.date).label("month"),
+            models.Transaction.type,
+            func.sum(models.Transaction.amount).label("total")
+        ).group_by("month", models.Transaction.type).all()

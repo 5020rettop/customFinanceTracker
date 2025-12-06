@@ -85,3 +85,16 @@ class Transaction(TransactionBase):
 
     class Config:
         from_attributes = True
+
+#
+# For Analytics
+#
+
+class CategoryBreakdown(BaseModel):
+    category: str
+    total: float
+
+class MonthlySummary(BaseModel):
+    month: str
+    type: str
+    total: float
