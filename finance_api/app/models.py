@@ -56,5 +56,22 @@ class Transaction( Base ):
     # link this transaction to a category id
     category_id = Column( Integer, ForeignKey( "categories.id" ) )
 
+    # link this transaction to a user id
+    user_id = Column( Integer, ForeignKey( "users.id" ) )
+
     # enables transactionA.category.name and stuff ( for QoL )
     category = relationship( "Category", back_populates="transactions" )
+
+    # link back to user
+    user = relationship( "User", back_populates="transactions" )
+
+# region User Table
+class User( Base ):
+    __tablename__ = "users"
+
+    id = Column( Integer, primary_key=True, index=True )
+    email = Column( String, unique=True, index=True )
+    hashed_password = Column( String )
+
+    # link users to their transactions
+    transactions = relationship( "Transaction", back_populates="user" )

@@ -42,7 +42,7 @@ from typing import List, Optional
     *tableName*Base to avoid duplication.
 '''
 #
-# For Category
+#  region Category
 #
 
 # base class
@@ -63,7 +63,7 @@ class Category(CategoryBase):
     model_config = ConfigDict( from_attributes=True )
 
 # 
-#  For Transaction
+#   region Transaction
 #
 
 # base class
@@ -86,7 +86,7 @@ class Transaction(TransactionBase):
     model_config = ConfigDict( from_attributes=True )
 
 #
-# For Analytics
+#   region Analytics
 #
 
 class CategoryBreakdown(BaseModel):
@@ -97,3 +97,25 @@ class MonthlySummary(BaseModel):
     month: str
     type: str
     total: float
+
+#
+#   region Users
+#
+
+class UserBase( BaseModel ):
+    email : str
+
+class UserCreate( UserBase ):
+    password : str
+
+class User( UserBase ):
+    id : int
+
+    model_config = ConfigDict( from_attributes=True )
+
+class Token( BaseModel ):
+    access_token : str
+    token_type : str
+
+class TokenData( BaseModel ):  
+    email : Optional[str] = None
