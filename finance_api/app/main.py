@@ -13,6 +13,7 @@
 #   region Standard Imports
 #
 ###########################################################################
+
 from datetime import date
 from fastapi import FastAPI
 
@@ -24,6 +25,7 @@ from fastapi import FastAPI
 
 from .database import engine, SessionLocal
 from . import models
+from .routers import categories, transactions
 
 ###########################################################################
 #
@@ -79,6 +81,10 @@ models.Base.metadata.create_all(bind=engine)
 
 # create app instance
 app = FastAPI()
+
+# include routers
+app.include_router( categories.router )
+app.include_router( transactions.router )
 
 @app.get( "/" )
 def root():

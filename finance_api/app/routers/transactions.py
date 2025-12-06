@@ -1,8 +1,7 @@
-#!/usr/bin/env python3
 ###########################################################################
-#     Yellow - Coldplay (Wisp Cover)
+#     Best - Gracie Abrams
 #   Written by Chutipon (Potter) Chutipanich 
-#           2025-12-03
+#           2025-12-06
 ###########################################################################
 
 ###########################################################################
@@ -11,9 +10,12 @@
 #
 ###########################################################################
 
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
+from fastapi import APIRouter, Depends, HTTPException
+from sqlalchemy.orm import Session
+from typing import List
+
+from .. import crud, schemas
+from ..database import get_db
 
 ###########################################################################
 #
@@ -21,22 +23,16 @@ from sqlalchemy.orm import sessionmaker
 #
 ###########################################################################
 
-# Dependency for API requests
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-        
 ###########################################################################
 #
 #   region Program Specific Globals
 #
 ###########################################################################
 
-# SQLite db url
-SQLALCHEMY_DATABASE_URL = "sqlite:///./finance.db"
+router = APIRouter(
+    prefix="/transactions",
+    tags=["transactions"]
+)
 
 ###########################################################################
 #
@@ -44,17 +40,11 @@ SQLALCHEMY_DATABASE_URL = "sqlite:///./finance.db"
 #
 ###########################################################################
 
-# Create engine
-# "check_same_thread": False is needed only for SQLite
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
+@router.post( "/", response_model=schemas.Transaction )
+def createTransaction( transaction: schemas.TransactionCreate, db: Session = Depends( get_db ) ):
+    return crud.TransactionCRUD.createTransaction( db=db, transaction=transaction )
 
-# Create session 
-# Each instance of this class will be a database session
-SessionLocal = sessionmaker( autocommit=False, autoflush=False, bind=engine )
-
-# Create a Base class
-# This is the base class for all the database tables
-Base = declarative_base()
-
+@router.get( "/", response_model=List[schemas.Transaction] )
+def readTransactions( skip: int = 0, limit: int = 100, db: Session = Depends( get_db ) ):
+    transactions = crud.TransactionCRUD.getTransactions( db, skip=skip, limit=limit )
+    return transactions
