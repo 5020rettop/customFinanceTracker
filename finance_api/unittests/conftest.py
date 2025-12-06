@@ -10,7 +10,7 @@
 #
 ###########################################################################
 
-import pytest
+import pytest # pyright: ignore[reportMissingImports]
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from fastapi.testclient import TestClient
