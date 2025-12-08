@@ -12,7 +12,7 @@
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from jose import JWTError, jwt
+from jose import JWTError, jwt # pyright: ignore[reportMissingModuleSource]
 from sqlalchemy.orm import Session
 
 from . import crud, models, schemas, database, auth
