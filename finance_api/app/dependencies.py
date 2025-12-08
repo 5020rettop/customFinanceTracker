@@ -58,7 +58,7 @@ def getCurrentUser(
         raise credentials_exception
     
     # check if user exists
-    user = crud.get_user_by_email( db, email=email )
+    user = crud.UserCRUD.getUserByEmail( db, email=email )
     if user is None:
         raise credentials_exception
     return user

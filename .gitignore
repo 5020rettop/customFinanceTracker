@@ -8,3 +8,4 @@ finance_api/app/__pycache__/*
 # Local database file
 *.db
 finance.db
+transactions.csv

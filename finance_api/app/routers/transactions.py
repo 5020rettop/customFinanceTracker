@@ -10,7 +10,11 @@
 #
 ###########################################################################
 
+import csv
+import io
+
 from fastapi import APIRouter, Depends, HTTPException
+from fastapi.responses import StreamingResponse
 from sqlalchemy.orm import Session
 from typing import List
 
@@ -82,3 +86,33 @@ def getBreakdown( db: Session = Depends( get_db ), current_user: models.User = D
 @router.get( "/monthly", response_model=List[ schemas.MonthlySummary ] )
 def getMonthlySummary( db: Session = Depends( get_db ), current_user: models.User = Depends(getCurrentUser) ) -> List[ schemas.MonthlySummary ]:
     return crud.TransactionCRUD.getMonthlySummary( db, user_id=current_user.id )
+
+
+@router.get( "/export/csv" )
+def exportTransactionsCSV( 
+        db: Session = Depends( get_db ), 
+        current_user: models.User  = Depends(getCurrentUser) ) -> StreamingResponse:
+    
+    # can add limit if needed
+    transactions = crud.TransactionCRUD.getTransactions( db, user_id=current_user.id )
+
+    # create mem buffer for csv file
+    output = io.StringIO()
+    writer = csv.writer(output)
+
+    # write header for column nammes
+    writer.writerow( ["ID", "Amount", "Description", "Date", "Type", "Category ID"] )
+
+    # write data
+    for t in transactions: # TODO: optimize using openpyxl or pandas for parallel writing
+        writer.writerow( [ t.id, t.amount, t.description, t.date, t.type, t.category_id ] )
+
+    # reset pointer to start
+    output.seek(0)
+
+    # Return as StreamingResponse
+    return StreamingResponse( 
+                            output, 
+                            media_type="text/csv", 
+                            headers={ "Content-Disposition": "attachment; filename=transactions.csv" } 
+                            )
