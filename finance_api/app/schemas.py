@@ -11,7 +11,7 @@
 ###########################################################################
 
 from pydantic import BaseModel, ConfigDict
-from datetime import date
+from datetime import date, time
 from typing import List, Optional
 
 ###########################################################################
@@ -71,6 +71,7 @@ class TransactionBase(BaseModel):
     amount: float
     description: str
     date: date
+    time: time
     type: str  # "income" or "expense"
 
 # schema for creating a transaction (user input)

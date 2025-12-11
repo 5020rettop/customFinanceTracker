@@ -10,7 +10,7 @@
 #
 ###########################################################################
 
-from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date
+from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date, Time
 from sqlalchemy.orm import relationship
 from .database import Base
 
@@ -51,6 +51,7 @@ class Transaction( Base ):
     amount = Column( Float ) # money
     description = Column( String )
     date = Column( Date ) # Format: YYYY-MM-DD
+    time = Column( Time ) # Format: HH:MM:SS
     type = Column( String ) # "income", "expense", etc.
     
     # link this transaction to a category id

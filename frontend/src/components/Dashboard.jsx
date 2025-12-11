@@ -43,6 +43,7 @@ const Dashboard = () => {
   const [ amount, setAmount] = useState('');
   const [ description, setDescription] = useState('');
   const [ date, setDate] = useState(new Date().toISOString().split('T')[0]);
+  const [ time, setTime] = useState(new Date().toTimeString().substring(0, 8));
   const [ type, setType] = useState('expense');
   const [ categoryId, setCategoryId] = useState('');
   
@@ -79,6 +80,7 @@ const Dashboard = () => {
         amount: parseFloat( amount ),
         description,
         date,
+        time,
         type,
         category_id: parseInt( categoryId )
       } );
@@ -110,7 +112,7 @@ const Dashboard = () => {
   };
 
   return (
-    <div style={{ maxWidth: '800px', margin: '2rem auto', padding: '0 1rem' }}>
+    <div style={{ maxWidth: '1600px', margin: '2rem auto', padding: '0 1rem' }}>
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <h2>My Finance Dashboard</h2>
         <button onClick={handleLogout} style={{ background: '#ff4444', color: 'white', border: 'none', padding: '8px 16px', cursor: 'pointer' }}>
@@ -141,6 +143,12 @@ const Dashboard = () => {
                 style={{ padding: '8px' }} 
             />
 
+             <input 
+                type="time" required 
+                value={time} onChange={(e) => setTime(e.target.value)}
+                style={{ padding: '8px' }} 
+            />
+
             <select value={type} onChange={(e) => setType(e.target.value)} style={{ padding: '8px' }}>
                 <option value="expense">Expense</option>
                 <option value="income">Income</option>
@@ -164,6 +172,7 @@ const Dashboard = () => {
         <thead>
             <tr style={{ textAlign: 'left', borderBottom: '2px solid #ddd' }}>
                 <th style={{ padding: '10px' }}>Date</th>
+                <th style={{ padding: '10px' }}>Time</th>
                 <th style={{ padding: '10px' }}>Description</th>
                 <th style={{ padding: '10px' }}>Category</th>
                 <th style={{ padding: '10px' }}>Type</th>
@@ -173,10 +182,12 @@ const Dashboard = () => {
         </thead>
         <tbody>
           { [...transactions]
-            .sort( (a, b) => new Date(a.date) - new Date(b.date) ) // sort by date ascending
+            .sort( (b, a) => a.time.localeCompare(b.time) ) // sort by time ascending
+            .sort( (b, a) => new Date(a.date) - new Date(b.date) ) // sort by date ascending
             .map(t => (
                 <tr key={t.id} style={{ borderBottom: '1px solid #eee' }}>
                     <td style={{ padding: '10px' }}>{t.date}</td>
+                    <td style={{ padding: '10px' }}>{t.time}</td>
                     <td style={{ padding: '10px' }}>{t.description}</td>
                     <td style={{ padding: '10px' }}>{t.category ? t.category.name : '-'}</td>
                     <td style={{ padding: '10px', color: t.type === 'income' ? 'green' : 'red' }}>
