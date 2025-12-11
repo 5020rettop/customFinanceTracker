@@ -76,7 +76,7 @@ def deleteTransaction(
         raise HTTPException( status_code=404, detail="Transaction not found" )          
         
     # delete transaction
-    crud.TransactionCRUD.deleteTransaction( db, transaction_id=transaction_id )
+    crud.TransactionCRUD.deleteTransaction( db, transaction_id=transaction_id, user_id=current_user.id )
     return { "detail": "Transaction deleted successfully" }
 
 @router.get( "/breakdown", response_model=List[ schemas.CategoryBreakdown ] )
