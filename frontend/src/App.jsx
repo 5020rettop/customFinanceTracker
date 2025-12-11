@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import Login from './components/Login';
 
 // We will create these components next
-const Login = () => <h2>Login Page Placeholder</h2>;
 const Signup = () => <h2>Signup Page Placeholder</h2>;
 const Dashboard = () => <h2>Dashboard Placeholder</h2>;
 
